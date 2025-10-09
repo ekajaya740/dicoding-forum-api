@@ -15,6 +15,10 @@ exports.up = (pgm) => {
     body: {
       type: 'TEXT',
     },
+    date: {
+      type: 'TEXT',
+      notNull: true,
+    },
     owner: {
       type: 'VARCHAR(50)',
       notNull: true,
