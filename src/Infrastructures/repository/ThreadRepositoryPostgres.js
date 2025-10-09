@@ -9,12 +9,13 @@ class ThreadRepositoryPostgres extends ThreadRepository {
   }
 
   async addThread(newThread) {
-    const { title, owner } = newThread;
+    const { title, body, owner } = newThread;
     const id = `thread-${this._idGenerator()}`;
+    const now = new Date();
 
     const query = {
-      text: 'INSERT INTO threads(id, title, owner) VALUES($1, $2, $3) RETURNING id, title, owner',
-      values: [id, title, owner],
+      text: 'INSERT INTO threads(id, title, body, date, owner) VALUES($1, $2, $3, $4, $5) RETURNING id, title, owner',
+      values: [id, title, body, now.toISOString(), owner],
     };
 
     const result = await this._pool.query(query);
@@ -24,7 +25,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
   async getById(id) {
     const query = {
-      text: 'SELECT id, title, owner FROM threads WHERE id = $1',
+      text: 'SELECT * FROM threads WHERE id = $1',
       values: [id],
     };
 

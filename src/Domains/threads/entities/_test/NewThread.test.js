@@ -6,6 +6,7 @@ describe('a NewThread entities', () => {
     // Arrange
     const payload = {
       title: 'abc',
+      owner: 'user-123',
     };
 
     // Action and Assert
@@ -16,6 +17,7 @@ describe('a NewThread entities', () => {
     // Arrange
     const payload = {
       title: 123,
+      body: true,
       owner: true,
     };
 
@@ -28,14 +30,16 @@ describe('a NewThread entities', () => {
     // Arrange
     const payload = {
       title: 'My First Thread',
+      body: 'This is the thread body',
       owner: userId,
     };
 
     // Action
-    const { title, owner } = new NewThread(payload);
+    const { title, body, owner } = new NewThread(payload);
 
     // Assert
     expect(title).toEqual(payload.title);
+    expect(body).toEqual(payload.body);
     expect(owner).toEqual(payload.owner);
   });
 });
