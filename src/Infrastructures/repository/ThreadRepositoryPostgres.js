@@ -1,4 +1,3 @@
-
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const ThreadRepository = require('../../Domains/threads/ThreadRepository');
 
@@ -39,4 +38,4 @@ class ThreadRepositoryPostgres extends ThreadRepository {
   }
 }
 
-module.exports = ThreadRepositoryPostgres
+module.exports = ThreadRepositoryPostgres;

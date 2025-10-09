@@ -24,7 +24,7 @@ describe('a NewThread entities', () => {
   });
 
   it('should create NewThread object correctly', () => {
-    userId = `user-${nanoid()}`
+    const userId = `user-${nanoid()}`;
     // Arrange
     const payload = {
       title: 'My First Thread',
