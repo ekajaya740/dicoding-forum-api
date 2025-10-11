@@ -4,7 +4,7 @@ class GetThreadByIdUseCase {
   }
 
   async execute(threadId) {
-    return this._threadRepository.getThreadById(threadId);
+    return this._threadRepository.getThreadByIdWithComments(threadId);
   }
 }
 

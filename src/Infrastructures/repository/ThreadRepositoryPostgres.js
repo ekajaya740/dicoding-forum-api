@@ -38,6 +38,58 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     return result.rows[0];
   }
 
+  async getThreadByIdWithComments(id) {
+    const query = {
+      text: `
+        SELECT 
+          t.id AS "threadId",
+          t.title,
+          t.body,
+          t.date AS "threadDate",
+          thread_owner.username AS "threadUsername",
+          c.id AS "commentId",
+          c.content AS "commentContent",
+          c.date AS "commentDate",
+          c."isDeleted" AS "commentIsDeleted",
+          comment_owner.username AS "commentUsername"
+        FROM threads t
+        LEFT JOIN users thread_owner ON thread_owner.id = t.owner
+        LEFT JOIN comments c ON c."threadId" = t.id
+        LEFT JOIN users comment_owner ON comment_owner.id = c.owner
+        WHERE t.id = $1
+        ORDER BY c.date ASC
+      `,
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('thread tidak ditemukan');
+    }
+
+    const threadRow = result.rows[0];
+
+    const comments = result.rows
+      .filter((row) => row.commentId)
+      .map((row) => ({
+        id: row.commentId,
+        content: row.commentIsDeleted ? '**komentar telah dihapus**' : row.commentContent,
+        date: row.commentDate,
+        username: row.commentUsername,
+        isDeleted: row.commentIsDeleted,
+      }));
+
+    return {
+      id: threadRow.threadId,
+      title: threadRow.title,
+      body: threadRow.body,
+      date: threadRow.threadDate,
+      username: threadRow.threadUsername,
+      comments,
+    };
+  }
+
   async verifyAvailableThreadById(id) {
     const query = {
       text: 'SELECT 1 FROM threads WHERE id = $1',

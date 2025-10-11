@@ -37,7 +37,7 @@ class ThreadsHandler {
         thread,
       },
     });
-    response.code(201);
+    response.code(200);
     return response;
   }
 }

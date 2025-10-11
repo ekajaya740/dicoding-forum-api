@@ -10,6 +10,10 @@ class CommentRepository {
   async deleteById(_id) {
     throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   }
+
+  async verifyCommentByOwner(_commentId, _ownerId) {
+    throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  }
 }
 
 module.exports = CommentRepository;
