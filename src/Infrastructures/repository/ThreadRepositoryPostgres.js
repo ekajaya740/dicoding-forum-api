@@ -51,13 +51,20 @@ class ThreadRepositoryPostgres extends ThreadRepository {
           c.content AS "commentContent",
           c.date AS "commentDate",
           c."isDeleted" AS "commentIsDeleted",
-          comment_owner.username AS "commentUsername"
+          comment_owner.username AS "commentUsername",
+          r.id AS "replyId",
+          r.content AS "replyContent",
+          r.date AS "replyDate",
+          r."isDeleted" AS "replyIsDeleted",
+          reply_owner.username AS "replyUsername"
         FROM threads t
         LEFT JOIN users thread_owner ON thread_owner.id = t.owner
         LEFT JOIN comments c ON c."threadId" = t.id
         LEFT JOIN users comment_owner ON comment_owner.id = c.owner
+        LEFT JOIN replies r ON r."commentId" = c.id
+        LEFT JOIN users reply_owner ON reply_owner.id = r.owner
         WHERE t.id = $1
-        ORDER BY c.date ASC
+        ORDER BY c.date ASC, r.date ASC
       `,
       values: [id],
     };
@@ -70,15 +77,37 @@ class ThreadRepositoryPostgres extends ThreadRepository {
 
     const threadRow = result.rows[0];
 
-    const comments = result.rows
-      .filter((row) => row.commentId)
-      .map((row) => ({
-        id: row.commentId,
-        content: row.commentIsDeleted ? '**komentar telah dihapus**' : row.commentContent,
-        date: row.commentDate,
-        username: row.commentUsername,
-        isDeleted: row.commentIsDeleted,
-      }));
+    const commentsMap = new Map();
+
+    result.rows.forEach((row) => {
+      if (!row.commentId) {
+        return;
+      }
+
+      if (!commentsMap.has(row.commentId)) {
+        commentsMap.set(row.commentId, {
+          id: row.commentId,
+          content: row.commentIsDeleted ? '**komentar telah dihapus**' : row.commentContent,
+          date: row.commentDate,
+          username: row.commentUsername,
+          isDeleted: row.commentIsDeleted,
+          replies: [],
+        });
+      }
+
+      if (row.replyId) {
+        const comment = commentsMap.get(row.commentId);
+        comment.replies.push({
+          id: row.replyId,
+          content: row.replyIsDeleted ? '**balasan telah dihapus**' : row.replyContent,
+          date: row.replyDate,
+          username: row.replyUsername,
+          isDeleted: row.replyIsDeleted,
+        });
+      }
+    });
+
+    const comments = Array.from(commentsMap.values());
 
     return {
       id: threadRow.threadId,
