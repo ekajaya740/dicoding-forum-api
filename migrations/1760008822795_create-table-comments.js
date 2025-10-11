@@ -28,6 +28,11 @@ exports.up = (pgm) => {
       references: 'threads',
       onDelete: 'CASCADE',
     },
+    isDeleted: {
+      type: 'BOOLEAN',
+      notNull: true,
+      default: false,
+    },
   });
 };
 
