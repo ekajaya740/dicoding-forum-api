@@ -216,8 +216,8 @@ describe('/threads/{threadId}/comments endpoint', () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const addedComment = JSON
-        .parse(addCommentResponse.payload).data.addedComment;
+      const { addedComment } = JSON
+        .parse(addCommentResponse.payload).data;
 
       // Action
       const response = await server.inject({
@@ -257,7 +257,7 @@ describe('/threads/{threadId}/comments endpoint', () => {
           Authorization: `Bearer ${ownerToken}`,
         },
       });
-      const addedComment = JSON.parse(addCommentResponse.payload).data.addedComment;
+      const { addedComment } = JSON.parse(addCommentResponse.payload).data;
       const { accessToken: otherUserToken } = await registerAndLoginUser(server, {
         username: 'dicoding6',
         password: 'secret',
