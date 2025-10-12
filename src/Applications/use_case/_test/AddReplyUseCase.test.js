@@ -10,14 +10,18 @@ describe('AddReplyUseCase', () => {
       commentId: 'comment-123',
     };
 
-    const addedReply = {
+    const expectedAddedReply = {
       id: 'reply-123',
       content: useCasePayload.content,
       owner: useCasePayload.owner,
     };
 
     const mockReplyRepository = {
-      addReply: jest.fn().mockResolvedValue(addedReply),
+      addReply: jest.fn().mockImplementation(async (newReply) => ({
+        id: 'reply-123',
+        content: newReply.content,
+        owner: newReply.owner,
+      })),
     };
     const mockCommentRepository = {
       getCommentById: jest.fn().mockResolvedValue({
@@ -43,7 +47,7 @@ describe('AddReplyUseCase', () => {
       .toHaveBeenCalledWith(useCasePayload.commentId);
     expect(mockReplyRepository.addReply)
       .toHaveBeenCalledWith(expect.objectContaining(useCasePayload));
-    expect(result).toStrictEqual(addedReply);
+    expect(result).toStrictEqual(expectedAddedReply);
   });
 
   it('should throw NotFoundError when comment does not belong to thread', async () => {

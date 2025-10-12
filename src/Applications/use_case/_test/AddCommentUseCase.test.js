@@ -8,14 +8,19 @@ describe('AddCommentUseCase', () => {
       owner: 'user-123',
       threadId: 'thread-123',
     };
-    const addedComment = {
+
+    const expectedAddedComment = {
       id: 'comment-123',
       content: useCasePayload.content,
       owner: useCasePayload.owner,
     };
 
     const mockCommentRepository = {
-      addComment: jest.fn().mockResolvedValue(addedComment),
+      addComment: jest.fn().mockImplementation(async (newComment) => ({
+        id: 'comment-123',
+        content: newComment.content,
+        owner: newComment.owner,
+      })),
     };
     const mockThreadRepository = {
       verifyAvailableThreadById: jest.fn().mockResolvedValue(),
@@ -32,7 +37,7 @@ describe('AddCommentUseCase', () => {
       .toHaveBeenCalledWith(useCasePayload.threadId);
     expect(mockCommentRepository.addComment)
       .toHaveBeenCalledWith(expect.objectContaining(useCasePayload));
-    expect(result).toStrictEqual(addedComment);
+    expect(result).toStrictEqual(expectedAddedComment);
   });
 
   it('should throw NotFoundError when thread does not exist', async () => {
