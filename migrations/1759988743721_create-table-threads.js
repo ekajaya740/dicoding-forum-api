@@ -22,7 +22,14 @@ exports.up = (pgm) => {
     owner: {
       type: 'VARCHAR(50)',
       notNull: true,
-      references: 'users',
+    },
+  }, {
+    foreignKeys: {
+      columns: 'owner',
+      references: {
+        schema: 'public',
+        name: 'users',
+      },
       onDelete: 'CASCADE',
     },
   });

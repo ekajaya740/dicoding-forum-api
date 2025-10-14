@@ -19,26 +19,47 @@ exports.up = (pgm) => {
     owner: {
       type: 'VARCHAR(50)',
       notNull: true,
-      references: 'users',
-      onDelete: 'CASCADE',
     },
     threadId: {
       type: 'VARCHAR(50)',
       notNull: true,
-      references: 'threads',
-      onDelete: 'CASCADE',
     },
     commentId: {
       type: 'VARCHAR(50)',
       notNull: true,
-      references: 'comments',
-      onDelete: 'CASCADE',
     },
     isDeleted: {
       type: 'BOOLEAN',
       notNull: true,
       default: false,
     },
+  }, {
+    foreignKeys: [
+      {
+        columns: 'owner',
+        references: {
+          schema: 'public',
+          name: 'users',
+        },
+        onDelete: 'CASCADE',
+      },
+      {
+        columns: 'threadId',
+        references: {
+          schema: 'public',
+          name: 'threads',
+        },
+        onDelete: 'CASCADE',
+      },
+      {
+        columns: 'commentId',
+        references: {
+          schema: 'public',
+          name: 'comments',
+        },
+        onDelete: 'CASCADE',
+      },
+    ],
   });
 };
 
