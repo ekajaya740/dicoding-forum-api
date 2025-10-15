@@ -1,5 +1,8 @@
+const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const NewReply = require('../../Domains/replies/entities/NewReply');
+
+const COMMENT_NOT_FOUND_MESSAGE = DomainErrorTranslator.getMessage('GET_COMMENT.COMMENT_NOT_FOUND');
 
 class AddReplyUseCase {
   constructor({ replyRepository, commentRepository, threadRepository }) {
@@ -16,7 +19,7 @@ class AddReplyUseCase {
     const comment = await this._commentRepository.getCommentById(newReply.commentId);
 
     if (comment.threadId !== newReply.threadId) {
-      throw new NotFoundError('komentar tidak ditemukan');
+      throw new NotFoundError(COMMENT_NOT_FOUND_MESSAGE);
     }
 
     return this._replyRepository.addReply(newReply);

@@ -1,6 +1,9 @@
+const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
 const ReplyRepository = require('../../Domains/replies/ReplyRepository');
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
+
+const AUTHORIZATION_ERROR_MESSAGE = DomainErrorTranslator.getMessage('AUTHORIZATION_ERROR.UNAUTHORIZED');
 
 class ReplyRepositoryPostgres extends ReplyRepository {
   constructor(pool, idGenerator) {
@@ -60,7 +63,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     const reply = await this.getById(replyId);
 
     if (reply.owner !== owner) {
-      throw new AuthorizationError('anda tidak berhak mengakses resource ini');
+      throw new AuthorizationError(AUTHORIZATION_ERROR_MESSAGE);
     }
   }
 }

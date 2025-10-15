@@ -1,6 +1,10 @@
+const DomainErrorTranslator = require('../../Commons/exceptions/DomainErrorTranslator');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
+
+const COMMENT_NOT_FOUND_MESSAGE = DomainErrorTranslator.getMessage('GET_COMMENT.COMMENT_NOT_FOUND');
+const AUTHORIZATION_ERROR_MESSAGE = DomainErrorTranslator.getMessage('AUTHORIZATION_ERROR.UNAUTHORIZED');
 
 class CommentRepositoryPostgres extends CommentRepository {
   constructor(pool, idGenerator) {
@@ -33,7 +37,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError('komentar tidak ditemukan');
+      throw new NotFoundError(COMMENT_NOT_FOUND_MESSAGE);
     }
 
     return result.rows[0];
@@ -48,7 +52,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError('komentar tidak ditemukan');
+      throw new NotFoundError(COMMENT_NOT_FOUND_MESSAGE);
     }
 
     return id;
@@ -58,7 +62,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     const comment = await this.getCommentById(commentId);
 
     if (comment.owner !== owner) {
-      throw new AuthorizationError('anda tidak berhak mengakses resource ini');
+      throw new AuthorizationError(AUTHORIZATION_ERROR_MESSAGE);
     }
   }
 }
