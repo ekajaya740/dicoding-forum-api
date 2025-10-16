@@ -175,57 +175,62 @@ describe('ThreadRepositoryPostgres', () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, () => {});
 
       // Action
-      const thread = await threadRepositoryPostgres.getThreadByIdWithComments('thread-123');
+      const rows = await threadRepositoryPostgres.getThreadByIdWithComments('thread-123');
 
       // Assert
-      expect(thread).toEqual({
-        id: 'thread-123',
-        title: 'Thread Title',
-        body: 'Thread body',
-        date: threadDate,
-        username: 'dicoding',
-        comments: [
-          {
-            id: 'comment-123',
-            content: 'First comment',
-            date: commentDate1,
-            username: 'john',
-            isDeleted: false,
-            replies: [
-              {
-                id: 'reply-123',
-                content: 'First reply',
-                date: replyDate1,
-                username: 'jane',
-                isDeleted: false,
-              },
-              {
-                id: 'reply-124',
-                content: '**balasan telah dihapus**',
-                date: replyDate2,
-                username: 'jane',
-                isDeleted: true,
-              },
-            ],
-          },
-          {
-            id: 'comment-124',
-            content: '**komentar telah dihapus**',
-            date: commentDate2,
-            username: 'john',
-            isDeleted: true,
-            replies: [
-              {
-                id: 'reply-125',
-                content: 'Another reply',
-                date: replyDate3,
-                username: 'john',
-                isDeleted: false,
-              },
-            ],
-          },
-        ],
-      });
+      expect(rows).toEqual([
+        {
+          threadId: 'thread-123',
+          title: 'Thread Title',
+          body: 'Thread body',
+          threadDate,
+          threadUsername: 'dicoding',
+          commentId: 'comment-123',
+          commentContent: 'First comment',
+          commentDate: commentDate1,
+          commentIsDeleted: false,
+          commentUsername: 'john',
+          replyId: 'reply-123',
+          replyContent: 'First reply',
+          replyDate: replyDate1,
+          replyIsDeleted: false,
+          replyUsername: 'jane',
+        },
+        {
+          threadId: 'thread-123',
+          title: 'Thread Title',
+          body: 'Thread body',
+          threadDate,
+          threadUsername: 'dicoding',
+          commentId: 'comment-123',
+          commentContent: 'First comment',
+          commentDate: commentDate1,
+          commentIsDeleted: false,
+          commentUsername: 'john',
+          replyId: 'reply-124',
+          replyContent: 'Deleted reply',
+          replyDate: replyDate2,
+          replyIsDeleted: true,
+          replyUsername: 'jane',
+        },
+        {
+          threadId: 'thread-123',
+          title: 'Thread Title',
+          body: 'Thread body',
+          threadDate,
+          threadUsername: 'dicoding',
+          commentId: 'comment-124',
+          commentContent: 'Second comment',
+          commentDate: commentDate2,
+          commentIsDeleted: true,
+          commentUsername: 'john',
+          replyId: 'reply-125',
+          replyContent: 'Another reply',
+          replyDate: replyDate3,
+          replyIsDeleted: false,
+          replyUsername: 'john',
+        },
+      ]);
     });
   });
 
