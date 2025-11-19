@@ -1,0 +1,63 @@
+name: Node + PostgreSQL Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    environment:
+      name: test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: ${{ secrets.PGUSER_TEST }}
+          POSTGRES_PASSWORD: ${{ secrets.PGPASSWORD_TEST }}
+          POSTGRES_DB: ${{ vars.PGDATABASE_TEST }}
+        options: >-
+          --health-cmd="pg_isready -U test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run migrations
+        run: |
+          echo "Running DB migrations..."
+          npm run migrate:test up
+
+      - name: Run Tests
+        env:
+          PGHOST: ${{ vars.PGHOST_TEST }}
+          PGUSER: ${{ secrets.PGUSER_TEST }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD_TEST }}
+          PGDATABASE: ${{ vars.PGDATABASE_TEST }}
+          PGPORT: ${{ vars.PGPORT_TEST }}
+          ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
+          REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
+          ACCESS_TOKEN_AGE: ${{ vars.ACCESS_TOKEN_AGE }}
+        run: |
+          npm test
