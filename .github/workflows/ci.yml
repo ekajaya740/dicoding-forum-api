@@ -17,7 +17,7 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_USER: ${{ secrets.PGUSE_TEST }}
+          POSTGRES_USER: ${{ secrets.PGUSER_TEST }}
           POSTGRES_PASSWORD: ${{ secrets.PGPASSWORD_TEST }}
           POSTGRES_DB: ${{ vars.PGDATABASE_TEST }}
         options: >-
