@@ -17,9 +17,9 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_USER: ${{ secrets.PGUSER }}
-          POSTGRES_PASSWORD: ${{ secrets.PGPASSWORD }}
-          POSTGRES_DB: ${{ vars.PGDATABASE }}
+          POSTGRES_USER: ${{ secrets.PGUSE_TEST }}
+          POSTGRES_PASSWORD: ${{ secrets.PGPASSWORD_TEST }}
+          POSTGRES_DB: ${{ vars.PGDATABASE_TEST }}
         options: >-
           --health-cmd="pg_isready -U test"
           --health-interval=10s
@@ -51,11 +51,11 @@ jobs:
 
       - name: Run Tests
         env:
-          PGHOST: ${{ vars.PGHOST }}
-          PGUSER: ${{ secrets.PGUSER }}
-          PGPASSWORD: ${{ secrets.PGPASSWORD }}
-          PGDATABASE: ${{ vars.PGDATABASE }}
-          PGPORT: ${{ vars.PGPORT }}
+          PGHOST: ${{ vars.PGHOST_TEST }}
+          PGUSER: ${{ secrets.PGUSER_TEST }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD_TEST }}
+          PGDATABASE: ${{ vars.PGDATABASE_TEST }}
+          PGPORT: ${{ vars.PGPORT_TEST }}
           ACCESS_TOKEN_KEY: ${{ secrets.ACCESS_TOKEN_KEY }}
           REFRESH_TOKEN_KEY: ${{ secrets.REFRESH_TOKEN_KEY }}
           ACCESS_TOKEN_AGE: ${{ vars.ACCESS_TOKEN_AGE }}
