@@ -47,7 +47,7 @@ jobs:
       - name: Run migrations
         run: |
           echo "Running DB migrations..."
-          npm run migrate:test
+          npm run migrate:test up
 
       - name: Run Tests
         env:
