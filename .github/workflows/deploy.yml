@@ -59,9 +59,8 @@ jobs:
           ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}
           NODE_ENV=production
           EOT
+            npm install
 
-            npm install --production
-
-            pm2 startOrReload ecosystem.config.js --env production
+            pm2 startOrReload ecosystem.config.js
             pm2 save
           EOF
