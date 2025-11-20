@@ -1,0 +1,67 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    environment:
+      name: production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+          scp -i ~/.ssh/id_rsa ./nginx.conf ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/forumapi.conf
+
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            sudo mv /tmp/forumapi.conf /etc/nginx/sites-available/forumapi.conf
+
+            sudo ln -sf /etc/nginx/sites-available/forumapi.conf /etc/nginx/sites-enabled/forumapi.conf
+
+            sudo nginx -t
+
+            sudo systemctl reload nginx
+          EOF
+
+      - name: Copy project files to EC2
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            ./ \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_APP_DIR }}
+
+      - name: Deploy to EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd ${{ secrets.EC2_APP_DIR }}
+
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            cat > .env << EOT
+          PGHOST=${{ secrets.PGHOST }}
+          PGUSER=${{ secrets.PGUSER }}
+          PGPASSWORD=${{ secrets.PGPASSWORD }}
+          PGDATABASE=${{ secrets.PGDATABASE }}
+          PORT=${{ vars.PORT }}
+          ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
+          REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
+          ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}
+          NODE_ENV=production
+          EOT
+
+            npm install --production
+
+            pm2 startOrReload ecosystem.config.js --env production
+            pm2 save
+          EOF

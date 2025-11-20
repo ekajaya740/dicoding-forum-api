@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/app.js",
-    "start:dev": "nodemon src/app.js",
+    "start": "NODE_ENV=production node src/app.js",
+    "start:dev": "NODE_ENV=dev nodemon src/app.js",
     "test": "NODE_ENV=test jest --setupFiles dotenv/config -i",
     "test:watch:change": "NODE_ENV=test jest --watch --setupFiles dotenv/config -i",
     "test:watch": "NODE_ENV=test jest --watchAll --coverage --setupFiles dotenv/config -i",
