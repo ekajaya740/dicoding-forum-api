@@ -57,6 +57,11 @@ jobs:
           ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
           REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
           ACCESS_TOKEN_AGE=${{ vars.ACCESS_TOKEN_AGE }}
+          PGHOST_TEST=${{ vars.PGHOST_TEST }}
+          PGUSER_TEST=${{ secrets.PGUSER_TEST }}
+          PGDATABASE_TEST=${{ secrets.PGDATABASE_TEST }}
+          PGPASSWORD_TEST=${{ secrets.PGPASSWORD_TEST }}
+          PGPORT_TEST=${{ vars.PGPORT_TEST }}
           NODE_ENV=production
           EOT
             npm install
