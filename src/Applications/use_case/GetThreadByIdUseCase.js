@@ -24,6 +24,7 @@ class GetThreadByIdUseCase {
           date: row.commentDate,
           username: row.commentUsername,
           isDeleted: row.commentIsDeleted,
+          likeCount: parseInt(row.likeCount, 10),
           replies: [],
         });
       }
