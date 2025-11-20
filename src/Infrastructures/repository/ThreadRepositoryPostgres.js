@@ -41,7 +41,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
   async getThreadByIdWithComments(id) {
     const query = {
       text: `
-        SELECT 
+        SELECT
           t.id AS "threadId",
           t.title,
           t.body,
@@ -52,6 +52,7 @@ class ThreadRepositoryPostgres extends ThreadRepository {
           c.date AS "commentDate",
           c."isDeleted" AS "commentIsDeleted",
           comment_owner.username AS "commentUsername",
+          COALESCE(l.like_count, 0) AS "likeCount",
           r.id AS "replyId",
           r.content AS "replyContent",
           r.date AS "replyDate",
@@ -61,6 +62,11 @@ class ThreadRepositoryPostgres extends ThreadRepository {
         LEFT JOIN users thread_owner ON thread_owner.id = t.owner
         LEFT JOIN comments c ON c."threadId" = t.id
         LEFT JOIN users comment_owner ON comment_owner.id = c.owner
+        LEFT JOIN (
+          SELECT "commentId", COUNT(id) as like_count
+          FROM likes
+          GROUP BY "commentId"
+        ) l ON l."commentId" = c.id
         LEFT JOIN replies r ON r."commentId" = c.id
         LEFT JOIN users reply_owner ON reply_owner.id = r.owner
         WHERE t.id = $1

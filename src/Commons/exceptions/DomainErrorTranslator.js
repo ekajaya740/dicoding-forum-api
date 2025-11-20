@@ -24,6 +24,8 @@ const ERROR_TRANSLATIONS = Object.freeze({
   'NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION': createTranslation('tidak dapat membuat komentar baru karena tipe data tidak sesuai'),
   'NEW_REPLY.NOT_CONTAIN_NEEDED_PROPERTY': createTranslation('tidak dapat membuat balasan baru karena properti yang dibutuhkan tidak ada'),
   'NEW_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION': createTranslation('tidak dapat membuat balasan baru karena tipe data tidak sesuai'),
+  'NEW_LIKE.NOT_CONTAIN_NEEDED_PROPERTY': createTranslation('tidak dapat membuat like baru karena properti yang dibutuhkan tidak ada'),
+  'NEW_LIKE.NOT_MEET_DATA_TYPE_SPECIFICATION': createTranslation('tidak dapat membuat like baru karena tipe data tidak sesuai'),
   'GET_COMMENT.COMMENT_NOT_FOUND': createTranslation('komentar tidak ditemukan', NotFoundError),
   'AUTHORIZATION_ERROR.UNAUTHORIZED': createTranslation('anda tidak berhak mengakses resource ini', AuthorizationError),
 });
