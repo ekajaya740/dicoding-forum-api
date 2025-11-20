@@ -49,7 +49,7 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
             cat > .env << EOT
-          PGHOST=${{ secrets.PGHOST }}
+          PGHOST=${{ vars.PGHOST }}
           PGUSER=${{ secrets.PGUSER }}
           PGPASSWORD=${{ secrets.PGPASSWORD }}
           PGDATABASE=${{ secrets.PGDATABASE }}
