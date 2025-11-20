@@ -15,6 +15,7 @@ describe('GetThreadByIdUseCase', () => {
         commentDate: '2024-01-02T00:00:00.000Z',
         commentIsDeleted: false,
         commentUsername: 'john',
+        likeCount: '0',
         replyId: 'reply-123',
         replyContent: 'First reply',
         replyDate: '2024-01-03T00:00:00.000Z',
@@ -32,6 +33,7 @@ describe('GetThreadByIdUseCase', () => {
         commentDate: '2024-01-02T00:00:00.000Z',
         commentIsDeleted: false,
         commentUsername: 'john',
+        likeCount: '0',
         replyId: 'reply-124',
         replyContent: 'Deleted reply',
         replyDate: '2024-01-04T00:00:00.000Z',
@@ -49,6 +51,7 @@ describe('GetThreadByIdUseCase', () => {
         commentDate: '2024-01-05T00:00:00.000Z',
         commentIsDeleted: true,
         commentUsername: 'john',
+        likeCount: '0',
         replyId: null,
         replyContent: null,
         replyDate: null,
@@ -83,6 +86,7 @@ describe('GetThreadByIdUseCase', () => {
         commentDate: '2024-01-05T00:00:00.000Z',
         commentIsDeleted: true,
         commentUsername: 'john',
+        likeCount: '0',
         replyId: 'reply-125',
         replyContent: 'Another reply',
         replyDate: '2024-01-06T00:00:00.000Z',
@@ -116,6 +120,7 @@ describe('GetThreadByIdUseCase', () => {
           date: '2024-01-02T00:00:00.000Z',
           username: 'john',
           isDeleted: false,
+          likeCount: 0,
           replies: [
             {
               id: 'reply-123',
@@ -139,6 +144,7 @@ describe('GetThreadByIdUseCase', () => {
           date: '2024-01-05T00:00:00.000Z',
           username: 'john',
           isDeleted: true,
+          likeCount: 0,
           replies: [
             {
               id: 'reply-125',
