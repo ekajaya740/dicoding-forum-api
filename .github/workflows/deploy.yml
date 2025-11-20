@@ -53,7 +53,7 @@ jobs:
           PGUSER=${{ secrets.PGUSER }}
           PGPASSWORD=${{ secrets.PGPASSWORD }}
           PGDATABASE=${{ secrets.PGDATABASE }}
-          PGPORT_TEST=${{ vars.PGPORT }}
+          PGPORT=${{ vars.PGPORT }}
           PORT=${{ vars.PORT }}
           ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
           REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
